@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-fluid section">
                 <nav class="col-fluid">
-                    <Navbar class="navbar"></Navbar>
+                    <Navbar v-on:dataSearch="searchMethod" class="navbar"></Navbar>
                 </nav>
                 <section class="col-fluid">
                     <div class=" row justify-content-end sort-space">
@@ -23,6 +23,9 @@
                     <h3 class="cart-title">Cart <span class="quantity-total">{{ cart_count_item }}</span></h3>
                 </div>
                 <div class="col-fluid cart-body">
+                    <div class="cart-not-found">
+                        <img src="https://i.ibb.co/n0rn3Lc/food-and-restaurant.png" alt="">
+                    </div>
                     <div v-for="item in cart" :key="item.id" class="col-fluid">
                         <itemInCart v-on:delete_id="idDelete" :item = "item" class="item-cart"></itemInCart>
                     </div>
@@ -57,7 +60,8 @@
                 removeData: {
                     dataId : '',
                     hiden : false
-                }
+                },
+                dataSearch : null
             }
         },
         methods: {
@@ -95,6 +99,11 @@
                         .then((res) => {this.data = res.data })
                         .catch((err) => { console.log(err)})
                 }
+            },
+            searchMethod(value){
+                axios.get(`http://localhost:3000/product/search?name=${value}`)
+                        .then((res) => {this.data = res.data })
+                        .catch((err) => { console.log(err)})
             },
             idDelete(value){
                 let id = []

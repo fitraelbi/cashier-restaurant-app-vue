@@ -11,7 +11,7 @@
             </div>
             <div class="col-fluid search-input">
                <div class="md-form active-pink-2 mb-3">
-                 <input class="form-control no-border" type="text" placeholder="Search something" aria-label="Search">
+                 <b-form-input v-model.lazy="text"  placeholder="Enter your name"></b-form-input>
             </div>
             </div>
             <div class="col-fluid icon-voice">
@@ -26,11 +26,30 @@
 </template>
 
 <script>
+    let timeout = null
+
     export default {
         name: "Navbar", 
         data: function(){
             return{
-                isHidden : true
+                isHidden : true,
+                text: '',
+                delay : 2000,
+                dataSearch: null
+            }
+        },
+        methods: {
+            getSearch(value){
+                this.dataSearch = value
+                this.$emit("dataSearch", this.dataSearch);
+            }
+        },
+        watch:{
+            text: function(val){
+                clearTimeout(timeout)
+                timeout = setTimeout(() => {
+                    this.getSearch(val)
+                }, 800);
             }
         }
     }
