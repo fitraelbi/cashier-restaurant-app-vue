@@ -42,12 +42,14 @@
 
     export default {
         name : "menu_card",
-        props: [ "item" ], 
+        props: [ "item", "removeData" ], 
 
         data: function(){
             return{
                 activeColor : "#5bc0de",
                 isHidden : false,
+                removeId : this.removeData.dataId,
+                removeHiden : this.removeData.hiden,
                 id : this.item.id,
                 edit_name: this.item.name,
                 edit_price: this.item.price,
@@ -77,7 +79,11 @@
             }
         },
         watch: {
-            
+            isHidden: function (val){
+                if(val == true){
+                    console.log(this.removeId)
+                }
+            }
         },
         methods: {
             showModal() {

@@ -8,7 +8,7 @@
             <div class="plus-minus" style="margin-bottom: 10px"><span v-on:click="minus" class="minus">-</span><span class="number">{{ num }}</span><span v-on:click="plus" class="plus">+</span></div>
         </div>
         <div class="col-md-4 right">
-            <i class="fas fa-times"></i>
+            <span @click="deleteData"><i class="fas fa-times"></i></span>
             <h4 style="margin-bottom: 15px;"> Rp. {{item.price}}</h4>
         </div>
     </div>
@@ -20,7 +20,8 @@
         props: [ "item" ],
         data : function(){
             return{
-                num : 1
+                num : 1,
+                id : this.item.id
             }
         },
         methods :{
@@ -30,6 +31,9 @@
             plus(){
                 this.num++
             },
+            deleteData(){
+                this.$emit("delete_id", this.id);
+            }
         }
     }
 </script>

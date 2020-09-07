@@ -1,7 +1,6 @@
 <template>
   <div>
     <b-form-select  v-model="selected" :options="options" ></b-form-select>
-    <div class="mt-3">Selected: <strong>{{ selected }}</strong></div>
   </div>
 </template>
 

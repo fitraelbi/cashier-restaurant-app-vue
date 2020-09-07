@@ -8,23 +8,23 @@
                 <section class="col-fluid">
                     <div class=" row justify-content-end sort-space">
                         <div class="sort float-right">
-                            <Sort />
+                            <Sort v-on:child-select="selectMethod" />
                         </div>
                     </div>
                     <div class="col-fluid content d-flex align-content-start flex-wrap ">
                             <div v-for="item in data" :key="item.id">
-                                <Card v-on:store_item="storeMethod" class="item" :item = "item" ></Card>
+                                <Card v-on:store_item="storeMethod" class="item" :item = "item" :removeData = "removeData" ></Card>
                             </div>     
                     </div>
                 </section>
             </div>
             <aside class="col-fluid">
                 <div class="col-fluid cart-header">
-                    <h3 class="cart-title">Cart <span class="quantity-total">{{ quantityItem }}</span></h3>
+                    <h3 class="cart-title">Cart <span class="quantity-total">{{ cart_count_item }}</span></h3>
                 </div>
                 <div class="col-fluid cart-body">
                     <div v-for="item in cart" :key="item.id" class="col-fluid">
-                        <itemInCart :item = "item" class="item-cart"></itemInCart>
+                        <itemInCart v-on:delete_id="idDelete" :item = "item" class="item-cart"></itemInCart>
                     </div>
                 </div>
             </aside>
@@ -53,7 +53,11 @@
             return{
                 data: null,
                 quantityItem : 0,
-                cart : []
+                cart : [], 
+                removeData: {
+                    dataId : '',
+                    hiden : false
+                }
             }
         },
         methods: {
@@ -67,10 +71,51 @@
                      })
                     name.includes(value.name) == false ?  this.cart.push(value) : null
                 }
-                console.log(this.cart)
+                //console.log(this.cart)
             },
+            selectMethod(value){
+                if(value == 'name'){
+                    axios.get('http://localhost:3000/product/orderbyname')
+                        .then((res) => {this.data = res.data })
+                        .catch((err) => { console.log(err)})
+                }else if (value == 'priceL'){
+                    axios.get('http://localhost:3000/product/orderbyprice')
+                        .then((res) => {this.data = res.data })
+                        .catch((err) => { console.log(err)})
+                }else if (value == 'category'){
+                    axios.get('http://localhost:3000/product/orderbycategory')
+                        .then((res) => {this.data = res.data })
+                        .catch((err) => { console.log(err)})
+                }else if (value == 'Newer'){
+                    axios.get('http://localhost:3000/product/orderbynew')
+                        .then((res) => {this.data = res.data })
+                        .catch((err) => { console.log(err)})
+                }else if (value == null){
+                    axios.get('http://localhost:3000/product')
+                        .then((res) => {this.data = res.data })
+                        .catch((err) => { console.log(err)})
+                }
+            },
+            idDelete(value){
+                let id = []
+                this.cart.forEach(element => {
+                    id.push(element.id)
+                })
+                let loc = id.indexOf(value)
+                this.cart = this.cart.slice(0, loc).concat(this.cart.slice(loc + 1, this.cart.length))
+                this.removeData.dataId = value
+            }
         },
-        
+        watch: {
+            removeData: function(val){
+                console.log(val)
+            }
+        },
+        computed: {
+            cart_count_item: function(){
+                return this.cart.length 
+            }
+        },
         mounted() {
         axios.get('http://localhost:3000/product')
             .then((res) => {
@@ -91,7 +136,7 @@
         margin-left: 0px;
     }
     .section{
-        height: 100vh;
+        
         width: 72%;
        
     }
@@ -105,7 +150,6 @@
     }
     section{
         width: 100%;
-        height: 100vh;
         background: rgba(190, 195, 202, 0.3);
         
     }
@@ -122,12 +166,11 @@
     }
     .sort-space{
         width: 100%;
-    
-        height: 110px;
+        height: 60px;
     }
     .sort{
         width: 20%;
-        padding-top: 10px;
+        padding-top: 30px;
         padding-right: 30px;
     }
     .content{
