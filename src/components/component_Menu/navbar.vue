@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="nav">
         <div class="row menu-bar" v-if="!isHidden">
             <img   class=".icon-sidebar" :src="require('@/img/open-menu.svg')" alt="">
             <h1>Food</h1>
@@ -32,7 +32,7 @@
         name: "Navbar", 
         data: function(){
             return{
-                isHidden : true,
+                isHidden : false,
                 text: '',
                 delay : 2000,
                 dataSearch: null
@@ -116,4 +116,10 @@ img{
   border-bottom: 0;
   box-shadow: 0 0px 0 0 #f48fb1;
 }
+
+@media screen and (max-width: 400px;) {
+        .nav{
+            display: none;
+        }
+    }
 </style>

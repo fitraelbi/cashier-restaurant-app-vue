@@ -3,7 +3,8 @@ import App from './App.vue'
 import VueRouter from 'vue-router'
 import BootstrapVue from 'bootstrap-vue/dist/bootstrap-vue.esm';
 
-
+import Chartkick from 'vue-chartkick'
+import Chart from 'chart.js'
 
 
 import 'bootstrap/dist/css/bootstrap.css';
@@ -16,7 +17,9 @@ import Menu from './components/MenuNew'
 import History from './components/History'
 
 
-Vue.use(BootstrapVue);
+Vue.use(BootstrapVue)
+
+Vue.use(Chartkick.use(Chart))
 
 Vue.use(VueRouter)
 

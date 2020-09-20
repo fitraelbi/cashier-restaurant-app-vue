@@ -21,18 +21,31 @@
         data : function(){
             return{
                 num : 1,
-                id : this.item.id
+                id : this.item.id,
+                params_checkout : {
+                    id : 0,
+                    num : 0,
+                }
             }
         },
         methods :{
             minus(){
                 this.num > 1 ? this.num-- : null
+                this.params_checkout.id = this.id
+                this.params_checkout.num = this.num
+                this.$emit("item_num", this.params_checkout)
+                //console.log(this.params_checkout.num)
             },
             plus(){
                 this.num++
+                this.params_checkout.id = this.id
+                this.params_checkout.num = this.num
+                // console.log(this.params_checkout.num)
+                 this.$emit("item_num", this.params_checkout)
             },
             deleteData(){
-                this.$emit("delete_id", this.id);
+                this.$emit("delete_id", this.id)
+                
             }
         }
     }

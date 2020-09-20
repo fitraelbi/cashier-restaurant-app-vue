@@ -2,7 +2,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-fluid section">
-                <nav class="col-fluid">
+                <nav class="col-fluid nav">
                     <Navbar v-on:dataSearch="searchMethod" class="navbar"></Navbar>
                 </nav>
                 <section class="col-fluid">
@@ -13,25 +13,54 @@
                     </div>
                     <div class="col-fluid content d-flex align-content-start flex-wrap ">
                             <div v-for="item in data" :key="item.id">
-                                <Card v-on:store_item="storeMethod" class="item" :item = "item" :removeData = "removeData" ></Card>
+                                <Card v-on:store_item="storeMethod" class="item" :item = "item" :removeData="removeData" :removeAllCheck="removeAllCheck" ></Card>
                             </div>     
                     </div>
                 </section>
             </div>
-            <aside class="col-fluid">
+            <aside class="col-fluid aside">
                 <div class="col-fluid cart-header">
                     <h3 class="cart-title">Cart <span class="quantity-total">{{ cart_count_item }}</span></h3>
                 </div>
                 <div class="col-fluid cart-body">
-                    <div class="cart-not-found">
+                    <div v-if="cart_count_item == 0" class="cart-not-found">
                         <img src="https://i.ibb.co/n0rn3Lc/food-and-restaurant.png" alt="">
+                        <h3>Your cart is empty</h3>
+                        <p>Please add some items from the menu</p>
                     </div>
-                    <div v-for="item in cart" :key="item.id" class="col-fluid">
-                        <itemInCart v-on:delete_id="idDelete" :item = "item" class="item-cart"></itemInCart>
+                    <div class="cart-item">
+                        <div v-for="item in cart" :key="item.id" class="col-fluid">
+                            <itemInCart v-on:delete_id="idDelete" v-on:item_num="num_item" :item = "item" class="item-cart"></itemInCart>
+                        </div>
+                        <div class="checkout" v-if="cart_count_item > 0" >
+                            <h4>Total : <span class="float-right">Rp. {{ total_price }}*</span></h4>
+                            <h5>* Belum termasuk ppn</h5>
+                            <b-button  size="lg" class="mt-2" @click="generateNum" style="border: none; background-color: #57CAD5; color: white; " block >add Receipt </b-button>
+                            <b-button @click="cancelCart" size="lg" class="mt-3" style="border: none; background-color: #F24F8A; color: white; "  block >Cancel</b-button>
+                        </div>
                     </div>
                 </div>
             </aside>
         </div>
+        <b-modal ref="modal-checkout" hide-header  hide-footer title="Edit Menu">
+           <div class="modal-checkout-header" >
+                 <p class="my-4" style="font-size: 25px;">Checkout  <span class="float-right" style="font-size: 18px;">Receipt no: {{ invoces_recipes }}</span></p>
+                 <p style="font-size: 16px;">Cashier : {{ name_cashier }}</p>
+             </div>
+             <div style="margin-top: 30px;">
+                <div v-for="item in cart" :key="item.id">
+                <listReceipt :item="item" style="margin-top: 7px;" ></listReceipt>
+                </div>
+                <div style="font-size: 18px; margin-top: 7px;"><span>PPN 10%</span> <span class="float-right"> Rp. {{ ppn_tax }}</span></div>
+             </div>
+             <div style="margin-top: 50px; ">
+                <div style="font-size: 21px;"><span class="float-right">Total : <span style="margin-left: 30px;">Rp. {{ total_all }}</span></span></div>
+             </div>
+             <div style="padding-top: 50px;">
+                 <b-button size="lg" class="mt-2" style="border: none; background-color: #57CAD5; color: white; " block @click="checkout">Checkout </b-button>
+                 <b-button size="lg" class="mt-3" style="border: none; background-color: #F24F8A; color: white; "  block @click="hideModal">Cancel</b-button>
+             </div>
+    </b-modal>
     </div>
 </template>
 
@@ -42,6 +71,7 @@
     import Sort from './component_Menu/sort.vue'
     import Card from './component_Menu/menu_card'
     import itemInCart from './component_Menu/item_in_cart'
+    import listReceipt from './component_Menu/list_receipt'
 
 
     export default {
@@ -50,18 +80,28 @@
             Navbar,
             Sort,
             Card,
-            itemInCart
+            itemInCart,
+            listReceipt,
         },
         data: function(){
             return{
                 data: null,
                 quantityItem : 0,
                 cart : [], 
-                removeData: {
-                    dataId : '',
-                    hiden : false
-                },
-                dataSearch : null
+                removeData : 0,
+                dataSearch : null,
+                url : process.env.PRODUCT_API_KEY,
+                cart_checkout : [],
+                invoces_recipes : 0,
+                ppn_tax : 1,
+                total_all : 1,
+                name_cashier: "Pevita Pearce",
+                params : {
+                    invoices: '',
+                    cashier: '',
+                    orders: '',
+                    total: ''
+                }
             }
         },
         methods: {
@@ -75,35 +115,35 @@
                      })
                     name.includes(value.name) == false ?  this.cart.push(value) : null
                 }
-                //console.log(this.cart)
             },
             selectMethod(value){
                 if(value == 'name'){
-                    axios.get('http://localhost:3000/product/orderbyname')
-                        .then((res) => {this.data = res.data })
+                    axios.get(process.env.VUE_APP_PRODUCT_ORDERBYNAME)
+                        .then((res) => {this.data = res.data.result })
                         .catch((err) => { console.log(err)})
                 }else if (value == 'priceL'){
-                    axios.get('http://localhost:3000/product/orderbyprice')
-                        .then((res) => {this.data = res.data })
+                    axios.get(process.env.VUE_APP_PRODUCT_ORDERBYPRICEL)
+                        .then((res) => {this.data = res.data.result  })
                         .catch((err) => { console.log(err)})
                 }else if (value == 'category'){
-                    axios.get('http://localhost:3000/product/orderbycategory')
-                        .then((res) => {this.data = res.data })
+                    axios.get(process.env.VUE_APP_PRODUCT_ORDERBYCATEGORY)
+                        .then((res) => {this.data = res.data.result  })
                         .catch((err) => { console.log(err)})
                 }else if (value == 'Newer'){
-                    axios.get('http://localhost:3000/product/orderbynew')
-                        .then((res) => {this.data = res.data })
+                    axios.get(process.env.VUE_APP_PRODUCT_ORDERBYNEW)
+                        .then((res) => {this.data = res.data.result  })
                         .catch((err) => { console.log(err)})
                 }else if (value == null){
-                    axios.get('http://localhost:3000/product')
-                        .then((res) => {this.data = res.data })
+                    axios.get(process.env.VUE_APP_URL)
+                        .then((res) => {this.data = res.data.result  })
                         .catch((err) => { console.log(err)})
                 }
             },
             searchMethod(value){
                 axios.get(`http://localhost:3000/product/search?name=${value}`)
-                        .then((res) => {this.data = res.data })
+                        .then((res) => {this.data = res.data.result })
                         .catch((err) => { console.log(err)})
+
             },
             idDelete(value){
                 let id = []
@@ -112,24 +152,82 @@
                 })
                 let loc = id.indexOf(value)
                 this.cart = this.cart.slice(0, loc).concat(this.cart.slice(loc + 1, this.cart.length))
-                this.removeData.dataId = value
-            }
-        },
-        watch: {
-            removeData: function(val){
-                console.log(val)
-            }
+                return this.removeData = value
+                
+            },
+            num_item(value){
+                let dataId = value.id
+                let numData = value.num
+                this.cart.forEach(element => {
+                    if(element.id == dataId){
+                        element.num = numData
+                    }
+                })
+            },
+            cancelCart(){
+                this.cart = []
+            },
+            generateNum(){
+                this.invoces_recipes = '#'+Math.floor(Math.random()*100000)
+                let total = this.cart.map(item => parseInt(item.price)*item.num).reduce((prev, next) => prev + next)
+                this.ppn_tax =  total*0.1
+                this.total_all = total+this.ppn_tax
+                this.showModal()
+            },
+            checkout(){
+                const menu_arr = this.cart.map(item => item.name)
+                const menu = menu_arr.join(", ")
+                //console.log(typeof(menu))
+                this.postCheckout(this.invoces_recipes, this.name_cashier, menu, this.total_all )
+            },
+             showModal() {
+                this.$refs['modal-checkout'].show()
+            },
+            hideModal() {
+                this.$refs['modal-checkout'].hide()
+            },
+            async postCheckout(invoices, cashier, menu_list, total){
+                this.params.invoices = invoices
+                this.params.cashier = cashier
+                this.params.orders = menu_list
+                this.params.total = total
+                //console.log(this.params)
+                await axios.post('http://localhost:3000/history', this.params)
+                .then((res) => {
+                        console.log(res.data)
+                        this.load()
+                    })
+                .catch(((err) => {
+                        console.log(err)
+                    }))
+            },
+            load(){
+                this.$router.go(this.$router.currentRoute)
+            }, 
         },
         computed: {
             cart_count_item: function(){
                 return this.cart.length 
-            }
+            },
+            total_price: function(){
+               return this.cart.map(item => parseInt(item.price)*item.num).reduce((prev, next) => prev + next)
+            },
+            removeAllCheck: function(){
+                if(this.cart.length == 0){
+                    return true
+                }else{
+                    return false
+                }
+            },
+            
+        },
+        watch : {
+            
         },
         mounted() {
-        axios.get('http://localhost:3000/product')
+        axios.get(process.env.VUE_APP_URL)
             .then((res) => {
-                this.data = res.data
-                
+                this.data = res.data.result
             })
             .catch((err) => {
                 console.log(err)
@@ -145,6 +243,7 @@
         margin-left: 0px;
     }
     .section{
+        background: rgba(190, 195, 202, 0.3);
         
         width: 72%;
        
@@ -159,7 +258,7 @@
     }
     section{
         width: 100%;
-        background: rgba(190, 195, 202, 0.3);
+      
         
     }
     .navbar{
@@ -178,13 +277,14 @@
         height: 60px;
     }
     .sort{
-        width: 20%;
+        width: 300px;
         padding-top: 30px;
         padding-right: 30px;
     }
     .content{
         margin-top: 0px;
-        margin-left: 60px;
+        margin-left: 90px;
+        
     }
     .item{
         margin : 20px;
@@ -198,12 +298,19 @@
         width: 100%;
         height: 65px;
         background: white;
-        position: relative;
+        position: fixed;
         box-shadow: 0px 3px 2px rgba(0, 0, 0, 0.25);
         color: black;   
+        z-index: 4;
     }
+
     .cart-title{
         line-height: 60px;
+        position: fixed;
+        margin-left: 12%;
+    }
+    .cart-title h3{
+        text-align: center;
     }
    
     .cart-body{
@@ -220,4 +327,33 @@
         height: 150px;
         margin-bottom: 20px;
     }
+
+    .cart-not-found{
+        position: fixed;
+        margin-left: 7%;
+        line-height: 20px;
+    }
+    .cart-item{
+        margin-top: 100px;
+    }
+    .checkout{
+        margin: 30px;
+        margin-top: 50px;
+        text-align: left;
+    }
+    .checkout h4{
+        text-align: left;
+    }
+    .checkout b-button{
+        height: 100px;
+    }
+    .modal-checkout-header{
+        line-height: 5px;
+    }
+    @media screen and (max-width: 800px;) {
+        .aside{
+            display: none;
+        }
+    }
+    
 </style>

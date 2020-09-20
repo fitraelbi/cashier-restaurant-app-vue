@@ -10,7 +10,7 @@
             </div>
         </b-card>
         <div class="body-card">
-            <b-card-title class="title">{{ item.name }} <span class="float-right" :style="{ backgroundColor: activeColor }">{{ item.category }}</span></b-card-title>
+            <b-card-title v-model="category"  class="title">{{ item.name }} <span class="float-right" :style="[item.category == 'drink' ? { backgroundColor: '#5bc0de' } : item.category == 'cake' ? { backgroundColor: '#f0ad4e' } : item.category == 'food' ? { backgroundColor: '#5cb85c' } : null]">{{ category }}</span></b-card-title>
             <b-card-text class="price">Rp. {{ item.price }}  <span class="float-right"><span @click="showModal"><i class="fas fa-edit"></i></span><span @click="deleteMenu"><i class="fas fa-trash"></i></span></span></b-card-text>
         </div>
         </div>
@@ -42,14 +42,12 @@
 
     export default {
         name : "menu_card",
-        props: [ "item", "removeData" ], 
+        props: [ "item", "removeData", "removeAllCheck" ], 
 
         data: function(){
             return{
-                activeColor : "#5bc0de",
+                color : '',
                 isHidden : false,
-                removeId : this.removeData.dataId,
-                removeHiden : this.removeData.hiden,
                 id : this.item.id,
                 edit_name: this.item.name,
                 edit_price: this.item.price,
@@ -65,24 +63,29 @@
                     name : '',
                     price: '',
                     category: '',
-                    image: ''
+                    image: '',
+                    num : 1,
+                    total:0
                 },
                 params_store : {
                     id : '',
                     name : '',
                     price: '',
-                    image: ''
+                    image: '',
+                    num : 1
                 },
                 params_delete : {
-                    id : '',
-                }
+                    id : 12,
+                    name : 'fitra'
+                },
             }
         },
-        watch: {
-            isHidden: function (val){
-                if(val == true){
-                    console.log(this.removeId)
-                }
+        watch: { 
+            removeData: function(newVal) { 
+                this.id == newVal ? this.isHidden = false : null
+            },
+            removeAllCheck : function(newVal){
+                if(newVal == true) this.isHidden = false
             }
         },
         methods: {
@@ -105,19 +108,20 @@
                 this.params.price = price
                 this.params.category = category_menu
                 this.params.image = img
-                await axios.put('http://localhost:3000/product', this.params)
+                this.params.total = price*this.params.num
+                await axios.put(process.env.VUE_APP_URL, this.params)
                 .then((res) => {
                         console.log(res.data)
                         this.load()
                     })
             },
             async deleteMenu(){
-                this.params_delete.id = this.id
-                await axios.delete('http://localhost:3000/product', this.params_delete)
+                await axios.delete(`http://localhost:3000/product?id=${this.id}`)
                 .then((res) => {
                         console.log(res.data)
-                        //this.load()
+                        this.load()
                     })
+                .catch((err) => { console.log(err)})
             },
             storeToCart(){
                 this.isHidden = true
