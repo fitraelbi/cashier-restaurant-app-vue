@@ -178,7 +178,6 @@
             checkout(){
                 const menu_arr = this.cart.map(item => item.name)
                 const menu = menu_arr.join(", ")
-                //console.log(typeof(menu))
                 this.postCheckout(this.invoces_recipes, this.name_cashier, menu, this.total_all )
             },
              showModal() {
@@ -192,10 +191,10 @@
                 this.params.cashier = cashier
                 this.params.orders = menu_list
                 this.params.total = total
-                //console.log(this.params)
-                await axios.post(process.env.HISTORY, this.params)
-                .then((res) => {
-                        console.log(res.data)
+                await axios.post(process.env.VUE_APP_HISTORY, this.params)
+                .then(() => {
+                        
+                        this.hideModal()
                         this.load()
                     })
                 .catch(((err) => {

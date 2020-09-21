@@ -66,6 +66,7 @@
         },
         data: function(){
             return{
+                order : 0,
                 today_income : 0,
                 month_income : 2300000,
                 year_income : 12000000,
@@ -93,7 +94,6 @@
             axios.get(process.env.VUE_APP_HISTORY)
             .then((res) => {
                 this.data_history = res.data
-                console.log(typeof(this.data_history))
             })
             .catch((err) => {
                 console.log(err)
