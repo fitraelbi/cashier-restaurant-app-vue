@@ -8,7 +8,7 @@
       </ul>
     </div>
     <div>
-      <b-modal ref="my-modal" hide-footer title="Using Component Methods">
+      <b-modal ref="my-modal" hide-footer title="Add Menu">
         <div class="d-block text-center">
           <div>
             <b-form-input style="margin-bottom: 25px;" v-model="food_name" placeholder="Enter food name"></b-form-input>
@@ -85,7 +85,7 @@ export default {
         this.params.price = price
         this.params.category = category_menu
         this.params.image = img
-        await axios.post('http://localhost:3000/product', this.params)
+        await axios.post(process.env.VUE_APP_URL, this.params)
           .then((res) => {
                 console.log(res.data)
                 this.load()

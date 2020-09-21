@@ -116,7 +116,7 @@
                     })
             },
             async deleteMenu(){
-                await axios.delete(`http://localhost:3000/product?id=${this.id}`)
+                await axios.delete(process.env.VUE_APP_URL, { params : { id : this.id } })
                 .then((res) => {
                         console.log(res.data)
                         this.load()

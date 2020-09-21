@@ -140,7 +140,8 @@
                 }
             },
             searchMethod(value){
-                axios.get(`http://localhost:3000/product/search?name=${value}`)
+                console.log(process.env.VUE_APP_SEARCH)
+                axios.get(process.env.VUE_APP_SEARCH, { params: { name: value } })
                         .then((res) => {this.data = res.data.result })
                         .catch((err) => { console.log(err)})
 
@@ -192,7 +193,7 @@
                 this.params.orders = menu_list
                 this.params.total = total
                 //console.log(this.params)
-                await axios.post('http://localhost:3000/history', this.params)
+                await axios.post(process.env.HISTORY, this.params)
                 .then((res) => {
                         console.log(res.data)
                         this.load()
@@ -350,10 +351,4 @@
     .modal-checkout-header{
         line-height: 5px;
     }
-    @media screen and (max-width: 800px;) {
-        .aside{
-            display: none;
-        }
-    }
-    
 </style>
