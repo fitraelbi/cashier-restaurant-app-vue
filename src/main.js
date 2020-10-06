@@ -15,6 +15,7 @@ import '@fortawesome/fontawesome-free/js/all.js'
 
 import Menu from './components/MenuNew'
 import History from './components/History'
+import login from './components/login' 
 
 
 Vue.use(BootstrapVue)
@@ -28,11 +29,22 @@ Vue.config.productionTip = false
 const router = new VueRouter({
   routes: [{
     path: '/', 
-    component : Menu
+    component : login,
+    name: 'login'
   },
   {
     path: '/history', 
     component : History
+  },
+  {
+    path: '/logout',
+    name: 'logout'
+  },
+  {
+    path: '/menu',
+    component : Menu,
+    name: 'menu'
+   
   }
 ],
   mode: 'history'

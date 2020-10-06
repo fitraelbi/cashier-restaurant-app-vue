@@ -80,7 +80,7 @@
                 { value: 'week', text: 'Week' },
                 { value: 'year', text: 'Year' },
                 ],
-                fields: ['invoices', 'cashier', 'orders', 'total'],
+                fields: ['invoice', 'cashier', 'orders', 'total'],
                 data_history: null
             }
         },
@@ -93,7 +93,8 @@
         created(){
             axios.get(process.env.VUE_APP_HISTORY)
             .then((res) => {
-                this.data_history = res.data
+                console.log(res.data.result)
+                this.data_history = res.data.result
             })
             .catch((err) => {
                 console.log(err)
@@ -123,10 +124,10 @@
         margin-bottom: 30px;
         padding-top: 30px;
         z-index: 0;
+        border: none;
     }
     .card .card-item{
         padding-top: 0px;
-        padding-left: 0px;
         height: 230px;
         border-radius: 10px;
         text-align: left;
@@ -180,6 +181,25 @@
     .table{
         width: 1200px;
         align-items: center;
+    }
+
+    @media screen and (max-width: 1000px) {
+       .card-item{
+           width: 60vh;
+       }
+       .chart{
+           display: none;
+       }
+    }
+
+    @media screen and (max-width: 700px) {
+        .content{
+        margin-left: 10px;
+        width: 100%;
+        }
+        .table_section{
+            display: none;
+        }
     }
 
 </style>

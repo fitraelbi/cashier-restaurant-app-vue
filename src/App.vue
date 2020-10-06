@@ -1,10 +1,12 @@
 <template>
   <div id="app">
-    <div class="sidebar">
+    <div v-show="$route.name!=='login'" class="sidebar">
       <ul>
-        <li><router-link to="/"><img class="icon-sidebar" :src="require('./img/food.svg')" alt=""></router-link></li>
+        <li><router-link to="/menu"><img class="icon-sidebar" :src="require('./img/food.svg')" alt=""></router-link></li>
         <li><router-link to="/history"><img class="icon-sidebar" :src="require('./img/graph.svg')" alt=""></router-link></li>
         <li @click="showModal"><img class="icon-sidebar" :src="require('./img/more (1).svg')" alt=""></li>
+        <li><router-link to="/login"><img class="icon-sidebar" :src="require('./assets/profile-user.svg')" alt=""></router-link></li>
+        <li @click="logout"><img class="icon-sidebar" :src="require('./assets/logout.svg')" alt=""></li>
       </ul>
     </div>
     <div>
@@ -93,8 +95,12 @@ export default {
       },
       load(){
         this.$router.go(this.$router.currentRoute)
+    },
+    logout(){
+      this.$router.push('/')
     }
-  }
+  },
+  
 }
 </script>
 
@@ -144,4 +150,10 @@ export default {
   background-color: #57CAD5; 
   color: white;
 }
+
+@media screen and (max-width: 700px) {
+        .sidebar{
+            display: none;
+        }
+    }
 </style>

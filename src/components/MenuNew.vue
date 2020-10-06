@@ -350,4 +350,44 @@
     .modal-checkout-header{
         line-height: 5px;
     }
+
+@media screen and (max-width: 1700px) {
+        .aside{
+            display: none;
+        }
+        .section{
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar{
+            width: 100%;
+        }
+        .content{
+            margin-left: 120px;
+        }
+        
+    }
+@media screen and (max-width: 1800px) {
+        .content{
+            margin-left: 50px;
+        }
+        
+    }
+@media screen and (max-width: 1050px) {
+        .content{
+            margin-left: 80px;
+        }
+        
+    }
+@media screen and (max-width: 700px) {
+        .content{
+            margin-left: 15%;
+        }
+        
+    }
+    
+    
+
+   
 </style>
