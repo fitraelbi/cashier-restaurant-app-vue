@@ -92,6 +92,9 @@ export default {
                 console.log(res.data)
                 this.load()
             })
+          .catch(error => {
+                  console.log(error)
+            });
       },
       load(){
         this.$router.go(this.$router.currentRoute)

@@ -116,7 +116,7 @@
                     })
             },
             async deleteMenu(){
-                await axios.delete(process.env.VUE_APP_URL, { params : { id : this.id } })
+                await axios.delete(process.env.VUE_APP_URL, { data: { name: this.edit_name } })
                 .then((res) => {
                         console.log(res.data)
                         this.load()

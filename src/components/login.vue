@@ -13,27 +13,27 @@
                       <label id="inputLabel"> Password </label>
                    </b-form-group>
                    <p>forgot your <span style="font-weight: 600; cursor: pointer;"> password</span> ?</p>
-                    <b-button class="button-login" @click="login" variant="success">SIGN IN</b-button>
+                    <b-button class="button-login" @click="login" style="background: #57CAD5;">SIGN IN</b-button>
                </form>
                
            </div>
        </div>
-       <div id="login-button" v-if="!login_status" style="background: #5cb85c; padding-top: 80px; transition: .5s ease-in-out;">
+       <div id="login-button" v-if="!login_status" style="background:  #57CAD5; padding-top: 80px; transition: .5s ease-in-out;">
            <div id="inputContainer">
                <form>
                     <h3 style="margin-bottom: 30px; color: white; font-weight: 600;">Hello, Friend !</h3>
                     <p style="color: white; font-size: 18px; font-weight: 600; margin-top: -20px;">You have an account?</p>
-                     <b-button class="button-login" @click="switch_login" style="border: 2px solid white; background: #5cb85c;  margin-top: 0px;" variant="info">SIGN IN</b-button>
+                     <b-button class="button-login" @click="switch_login" style="border: 2px solid white; background:  #57CAD5;  margin-top: 0px;" >SIGN IN</b-button>
                </form>
                
            </div>
        </div>
-         <div id="register-button" v-if="login_status" style="background: #5bc0de; padding-top: 80px; transition: .5s ease-in-out;">
+         <div id="register-button" v-if="login_status" style="background: #F24F8A; padding-top: 80px; transition: .5s ease-in-out;">
            <div id="inputContainer">
                <form>
                     <h3 style="margin-bottom: 30px; color: white; font-weight: 600;">Hello, Friend !</h3>
                     <p style="color: white; font-size: 18px; font-weight: 600; margin-top: -20px;">Don't you have an account?</p>
-                     <b-button class="button-register" @click="switch_register" style="border: 2px solid white;  margin-top: 0px;" variant="info">SIGN UP</b-button>
+                     <b-button class="button-register" @click="switch_register" style="border: 2px solid white;  margin-top: 0px; background:#F24F8A;">SIGN UP</b-button>
                </form>
                
            </div>
@@ -54,7 +54,7 @@
                        <input type="password" v-model="password_register" id="inputFieldPassword" ref="registerinputEmail" required>
                       <label id="inputLabel"> Password </label>
                    </b-form-group>
-                    <b-button class="button-register" @click="register" variant="info">SIGN UP</b-button>
+                    <b-button class="button-register" @click="register" style="background:#F24F8A;">SIGN UP</b-button>
                </form>
                
            </div>

@@ -24,7 +24,7 @@
                 </div>
                 <div class="col-fluid cart-body">
                     <div v-if="cart_count_item == 0" class="cart-not-found">
-                        <img src="https://i.ibb.co/n0rn3Lc/food-and-restaurant.png" alt="">
+                        <img src="https://i.ibb.co/MRkSPDJ/food-and-restaurant.png" alt="">
                         <h3>Your cart is empty</h3>
                         <p>Please add some items from the menu</p>
                     </div>
