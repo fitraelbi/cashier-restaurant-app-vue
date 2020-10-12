@@ -5,7 +5,7 @@ pipeline{
         choice(name: 'DEV/PRODUCTION', choices: ['DEVELOP', 'PRODUCTION'], description: 'Choose Server')
     }
     environment {
-        registry = "fitrakz/frontend"
+        registry = "fitrakz/production"
         registry_backend = "fitrakz/backend"
         registryCredential = 'dockerHub'
     }
@@ -58,7 +58,7 @@ pipeline{
                                 verbose: false,
                                 transfers: [
                                     sshTransfer(
-                                        execCommand: 'docker-compose down -v -f; docker rmi -f fitrakz/frontend:latest; docker rmi -f fitrakz/backend:latest; docker pull fitrakz/frontend:latest;  docker pull fitrakz/backend:latest;   docker-compose up -d --renew-anon-volumes;',
+                                        execCommand: 'docker-compose down -v -f; docker rmi -f fitrakz/production:latest; docker rmi -f fitrakz/backend:latest; docker pull fitrakz/production:latest;  docker pull fitrakz/backend:latest;   docker-compose up -d --renew-anon-volumes;',
                                         execTimeout: 120000,
                                     )
                                 ]
