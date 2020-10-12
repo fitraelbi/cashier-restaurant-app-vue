@@ -91,7 +91,7 @@ pipeline{
                                 verbose: false,
                                 transfers: [
                                     sshTransfer(
-                                        execCommand: 'docker-compose down -v -f; docker rmi -f fitrakz/develop:latest; docker run -it -p 8080:8080 --rm --name dockerize-vuejs-app-1 fitrakz/develop; docker rmi -f fitrakz/backend:latest; docker pull fitrakz/production:latest;  docker pull fitrakz/backend:latest;   docker-compose up -d --renew-anon-volumes; ',
+                                        execCommand: 'docker-compose down -v -f; docker rmi -f fitrakz/develop2:latest; docker run -it -p 8080:8080 --rm --name dockerize-vuejs-app-1 fitrakz/develop2; docker rmi -f fitrakz/backend:latest; docker pull fitrakz/production:latest;  docker pull fitrakz/backend:latest;   docker-compose up -d --renew-anon-volumes; ',
                                         execTimeout: 120000,
                                     )
                                 ]
