@@ -3,5 +3,5 @@ WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json /app/package.json
 RUN yarn install
-RUN yarn install @vue/cli@3.7.0 -g
+RUN yarn install -g @vue/cli@3.7.0 -g
 CMD ["yarn", "run", "serve"]
