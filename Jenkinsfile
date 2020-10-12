@@ -17,12 +17,13 @@ pipeline{
                 }
             }
         }
-        stage('Build Docker Image'){
+        stage('Build Docker Image Production'){
             steps{
                script {             
                  def dockerfile = 'dockerfile'
+                 CommitHash = sh (script : "git log -n 1 --pretty=format:'%H'", returnStdout: true)
                 docker.withRegistry('', registryCredential) {
-                    def app = docker.build(registry, "-f ${dockerfile} https://github.com/fitraelbi/cashier-restaurant-app-vue.git")
+                    def app = docker.build(registry, "-f ${dockerfile} fitraelbi/cashier-restaurant-app-vue:${CommitHash}")
                     app.push("latest")
                     def backend = docker.build(registry_backend, "-f ${dockerfile} https://github.com/fitraelbi/cashier-restaurant-app-nodejs3.git#main")
                     backend.push("latest")
