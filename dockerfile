@@ -1,16 +1,7 @@
-FROM node:12.2.0-alpine as build
+FROM node:12.2.0-alpine
 WORKDIR /app
+ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json /app/package.json
-RUN yarn install --silent
-RUN yarn add @vue/cli@3.7.0 -g
-COPY . /app
-RUN yarn run build
-
-# production environment
-FROM nginx:1.16.0-alpine
-COPY --from=build /app/dist /usr/share/nginx/html
-RUN rm /etc/nginx/conf.d/default.conf
-COPY ./nginx.conf /etc/nginx/conf.d
-VOLUME /var/log/nginx/log
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+RUN yarn install
+RUN yarn install @vue/cli@3.7.0 -g
+CMD ["yarn", "run", "serve"]
