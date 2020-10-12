@@ -6,6 +6,7 @@ pipeline{
     }
     environment {
         registry = "fitrakz/production"
+        registry_develop = "fitrakz/develop"
         registry_backend = "fitrakz/backend"
         registryCredential = 'dockerHub'
     }
@@ -21,9 +22,21 @@ pipeline{
             steps{
                script {             
                  def dockerfile = 'dockerfile'
-                 CommitHash = sh (script : "git log -n 1 --pretty=format:'%H'", returnStdout: true)
                 docker.withRegistry('', registryCredential) {
-                    def app = docker.build(registry, "-f ${dockerfile} https://github.com/fitraelbi/cashier-restaurant-app-vue.git#production")
+                    def app = docker.build(registry_develop, "-f ${dockerfile} https://github.com/fitraelbi/cashier-restaurant-app-vue.git#production")
+                    app.push("latest")
+                    def backend = docker.build(registry_backend, "-f ${dockerfile} https://github.com/fitraelbi/cashier-restaurant-app-nodejs3.git#main")
+                    backend.push("latest")
+                  }
+               }
+            }
+        }
+        stage('Build Docker Image Development'){
+            steps{
+               script {             
+                 def dockerfile = 'dockerfile'
+                docker.withRegistry('', registryCredential) {
+                    def app = docker.build(registry, "-f ${dockerfile} https://github.com/fitraelbi/cashier-restaurant-app-vue.git#develop")
                     app.push("latest")
                     def backend = docker.build(registry_backend, "-f ${dockerfile} https://github.com/fitraelbi/cashier-restaurant-app-nodejs3.git#main")
                     backend.push("latest")
@@ -48,7 +61,7 @@ pipeline{
                 echo 'Testing....'
             }
         }
-        stage('Deploy'){
+        stage('Deploy Production'){
             steps{
                 script {
                    sshPublisher(
@@ -58,7 +71,27 @@ pipeline{
                                 verbose: false,
                                 transfers: [
                                     sshTransfer(
-                                        execCommand: 'docker-compose down -v -f; docker rmi -f fitrakz/production:latest; docker rmi -f fitrakz/backend:latest; docker pull fitrakz/production:latest;  docker pull fitrakz/backend:latest;   docker-compose up -d --renew-anon-volumes;',
+                                        execCommand: 'docker-compose down -v -f; docker rmi -f fitrakz/develop:latest; docker rmi -f fitrakz/backend:latest; docker pull fitrakz/develop:latest;  docker pull fitrakz/develop:latest;   docker-compose up -d --renew-anon-volumes;',
+                                        execTimeout: 120000,
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+                }
+            }
+        }
+        stage('Deploy Development'){
+            steps{
+                script {
+                   sshPublisher(
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: 'Development',
+                                verbose: false,
+                                transfers: [
+                                    sshTransfer(
+                                        execCommand: 'docker-compose down -v -f; docker rmi -f fitrakz/develop:latest; docker rmi -f fitrakz/backend:latest; docker pull fitrakz/production:latest;  docker pull fitrakz/backend:latest;   docker-compose up -d --renew-anon-volumes;',
                                         execTimeout: 120000,
                                     )
                                 ]
