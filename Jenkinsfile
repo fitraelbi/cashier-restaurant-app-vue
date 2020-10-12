@@ -6,7 +6,7 @@ pipeline{
     }
     environment {
         registry = "fitrakz/production"
-        registry_develop = "fitrakz/develop"
+        registry_develop = "fitrakz/develop2"
         registry_backend = "fitrakz/backend"
         registryCredential = 'dockerHub'
     }
