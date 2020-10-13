@@ -2,11 +2,11 @@ FROM node:lts-alpine
 
 WORKDIR /app
 
-COPY package*.json /app
+COPY package*.json ./
 
 RUN yarn install
 
-COPY ./ /app
+COPY . .
 
 RUN yarn add @vue/cli@3.7.0 -g
 
