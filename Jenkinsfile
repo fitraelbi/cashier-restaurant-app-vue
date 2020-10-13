@@ -34,9 +34,10 @@ pipeline{
         stage('Build Docker Image Development'){
             steps{
                script {             
-                 def dockerfile = 'dockerfile.dev'
+                 def dockerfile_dev = 'dockerfile.dev'
+                 def dockerfile = 'dockerfile
                 docker.withRegistry('', registryCredential) {
-                    def app = docker.build(registry, "-f ${dockerfile} https://github.com/fitraelbi/cashier-restaurant-app-vue.git#develop")
+                    def app = docker.build(registry, "-f ${dockerfile_dev} https://github.com/fitraelbi/cashier-restaurant-app-vue.git#develop")
                     app.push("latest")
                     def backend = docker.build(registry_backend, "-f ${dockerfile} https://github.com/fitraelbi/cashier-restaurant-app-nodejs3.git#main")
                     backend.push("latest")
