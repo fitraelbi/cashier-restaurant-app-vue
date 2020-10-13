@@ -28,7 +28,7 @@ pipeline{
                script {             
                  def dockerfile = 'dockerfile'
                 docker.withRegistry('', registryCredential) {
-                    def app = docker.build(registry_develop, "-f ${dockerfile} https://github.com/fitraelbi/cashier-restaurant-app-vue.git#production")
+                    def app = docker.build(registry, "-f ${dockerfile} https://github.com/fitraelbi/cashier-restaurant-app-vue.git#production")
                     app.push("latest")
                     def backend = docker.build(registry_backend, "-f ${dockerfile} https://github.com/fitraelbi/cashier-restaurant-app-nodejs3.git#main")
                     backend.push("latest")
@@ -47,10 +47,10 @@ pipeline{
                  def dockerfile_dev = 'dockerfile.dev'
                  def dockerfile = 'dockerfile'
                 docker.withRegistry('', registryCredential) {
-                    def app = docker.build(registry, "-f ${dockerfile_dev} https://github.com/fitraelbi/cashier-restaurant-app-vue.git#develop")
-                    app.push("latest")
-                    def backend = docker.build(registry_backend, "-f ${dockerfile} https://github.com/fitraelbi/cashier-restaurant-app-nodejs3.git#main")
-                    backend.push("latest")
+                    def app2 = docker.build(registry_develop, "-f ${dockerfile_dev} https://github.com/fitraelbi/cashier-restaurant-app-vue.git#develop")
+                    app2.push("latest")
+                    def backend2 = docker.build(registry_backend, "-f ${dockerfile} https://github.com/fitraelbi/cashier-restaurant-app-nodejs3.git#main")
+                    backend2.push("latest")
                   }
                }
             }
