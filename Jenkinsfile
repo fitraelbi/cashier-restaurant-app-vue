@@ -19,6 +19,11 @@ pipeline{
             }
         }
         stage('Build Docker Image Production'){
+            when {
+                expression {
+                    BRANCH_NAME == 'production'
+                }
+            }
             steps{
                script {             
                  def dockerfile = 'dockerfile'
@@ -32,6 +37,11 @@ pipeline{
             }
         }
         stage('Build Docker Image Development'){
+            when {
+                expression {
+                    BRANCH_NAME == 'develop'
+                }
+            }
             steps{
                script {             
                  def dockerfile = 'dockerfile.dev'
@@ -62,6 +72,11 @@ pipeline{
             }
         }
         stage('Deploy Production'){
+            when {
+                expression {
+                    BRANCH_NAME == 'production'
+                }
+            }
             steps{
                 script {
                    sshPublisher(
@@ -71,7 +86,7 @@ pipeline{
                                 verbose: false,
                                 transfers: [
                                     sshTransfer(
-                                        execCommand: 'docker-compose down -v -f; docker rmi -f fitrakz/develop:latest; docker rmi -f fitrakz/backend:latest; docker pull fitrakz/develop:latest;  docker pull fitrakz/develop:latest;   docker-compose up -d --renew-anon-volumes;',
+                                        execCommand: 'docker-compose down -v -f; docker rmi -f fitrakz/production:latest; docker rmi -f fitrakz/backend:latest; docker pull fitrakz/production:latest;  docker pull fitrakz/backend:latest;   docker-compose up -d --renew-anon-volumes;',
                                         execTimeout: 120000,
                                     )
                                 ]
@@ -82,6 +97,11 @@ pipeline{
             }
         }
         stage('Deploy Development'){
+            when {
+                expression {
+                    BRANCH_NAME == 'develop'
+                }
+            }
             steps{
                 script {
                    sshPublisher(
@@ -91,7 +111,7 @@ pipeline{
                                 verbose: false,
                                 transfers: [
                                     sshTransfer(
-                                        execCommand: 'docker-compose down -v -f; docker rmi -f fitrakz/develop:latest; docker run -it -p 8080:8080 --rm --name dockerize-vuejs-app-1 fitrakz/develop; docker rmi -f fitrakz/backend:latest; docker pull fitrakz/production:latest;  docker pull fitrakz/backend:latest;   docker-compose up -d --renew-anon-volumes; ',
+                                        execCommand: 'docker-compose down -v -f; docker rmi -f fitrakz/develop2:latest;  docker rmi -f fitrakz/backend:latest; docker pull fitrakz/develop2:latest; docker run -it -p 8080:8080 --rm --name dockerize-vuejs-app-1 fitrakz/develop2; docker pull fitrakz/backend:latest;   docker-compose up -d --renew-anon-volumes; ',
                                         execTimeout: 120000,
                                     )
                                 ]
