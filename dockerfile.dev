@@ -9,4 +9,4 @@ RUN yarn add @vue/cli@3.7.0 -g
 
 EXPOSE 8080
 
-CMD [ "yarn", "serve" ]
+CMD [ "yarn", "start" ]
