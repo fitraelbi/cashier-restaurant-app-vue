@@ -35,7 +35,7 @@ pipeline{
             steps{
                script {             
                  def dockerfile_dev = 'dockerfile.dev'
-                 def dockerfile = 'dockerfile
+                 def dockerfile = 'dockerfile'
                 docker.withRegistry('', registryCredential) {
                     def app = docker.build(registry, "-f ${dockerfile_dev} https://github.com/fitraelbi/cashier-restaurant-app-vue.git#develop")
                     app.push("latest")
