@@ -50,7 +50,7 @@ const router = new VueRouter({
   mode: 'history'
 })
 
-//yoi
+//yoilow
 
 new Vue({
   router,
