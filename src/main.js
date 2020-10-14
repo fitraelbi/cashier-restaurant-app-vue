@@ -20,6 +20,8 @@ import login from './components/login'
 
 Vue.use(BootstrapVue)
 
+//hello
+
 Vue.use(Chartkick.use(Chart))
 
 Vue.use(VueRouter)
