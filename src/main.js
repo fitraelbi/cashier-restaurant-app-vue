@@ -52,7 +52,7 @@ const router = new VueRouter({
   mode: 'history'
 })
 
-//yoik
+
 
 
 new Vue({
