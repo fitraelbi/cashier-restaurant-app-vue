@@ -108,7 +108,7 @@ pipeline{
                    sshPublisher(
                         publishers: [
                             sshPublisherDesc(
-                                configName: 'Development',
+                                configNamae: 'Development',
                                 verbose: false,
                                 transfers: [
                                     sshTransfer(
