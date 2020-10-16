@@ -58,7 +58,7 @@ pipeline{
         stage('Remove Image'){
             steps{
                 echo 'Remove....'
-                sh "docker rmi ${registry_develop}:latest"
+                sh "docker rmi ${registry}:latest"
                 sh "docker rmi ${registry_backend}:latest"
             }
         }
