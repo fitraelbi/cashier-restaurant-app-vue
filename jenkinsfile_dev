@@ -25,7 +25,7 @@ pipeline{
                 }
             }
             steps{
-                ansiblePlaybook installation: 'ansible', inventory: 'hosts', playbook: 'ansible.yaml', disableHostKeyChecking: true 
+                ansiblePlaybook installation: 'ansible', inventory: 'hosts', playbook: 'ansible.yaml' 
             }
         }
     }
