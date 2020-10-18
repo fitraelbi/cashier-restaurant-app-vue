@@ -1,7 +1,7 @@
 ---
     - name: "Simple playbook"
-      hosts: war
 
       tasks:
         - name: Check Connection node
+          hosts: 172.31.50.52
           ping:
