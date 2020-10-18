@@ -1,0 +1,7 @@
+---
+    - name: "Simple playbook"
+      hosts: hosts
+
+      tasks:
+        - name: Check Connection node
+          ping:
