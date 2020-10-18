@@ -1,5 +1,6 @@
 ---
     - name: "Simple playbook"
+      hosts: war
 
       tasks:
         - name: Check Connection node
