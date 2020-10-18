@@ -4,5 +4,4 @@
 
       tasks:
         - name: Check Connection node
-          delegate_to: 172.31.50.52
           ping:
