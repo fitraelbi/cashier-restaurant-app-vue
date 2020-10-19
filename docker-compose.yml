@@ -50,6 +50,7 @@ services:
       DB_PASSWORD: 12341234
       DB_USER: mydb
       DB_HOST: db
+      DB_PORT: 5433
       DB_NAME: cashier-restaurant
       PORT_REDIS: 6379
       HOST_REDIS: redis
@@ -71,6 +72,7 @@ services:
       DB_USER: mydb
       DB_HOST: db
       DB_NAME: cashier-restaurant
+      DB_PORT: 5433
       PORT_REDIS: 6379
       HOST_REDIS: redis
       PORT: 3000
