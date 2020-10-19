@@ -5,9 +5,9 @@ pipeline{
         choice(name: 'DEV/PRODUCTION', choices: ['DEVELOP', 'PRODUCTION'], description: 'Choose Server')
     }
     environment {
-        registry = "fitrakz/production"
-        registry_develop = "fitrakz/develop2"
-        registry_backend = "fitrakz/backend"
+        registry_stage = "fitrakz/production"
+        registry_dev = "fitrakz/develop2"
+        registry_backend = "fitrakz/node_dev"
         registryCredential = 'dockerHub'
     }
     stages{
@@ -18,6 +18,44 @@ pipeline{
                 }
             }
         }
+        stage('Build Docker Image Stage'){
+            when {
+                expression {
+                    BRANCH_NAME == 'stage'
+                }
+            }
+            steps{
+               script {             
+                def dockerfile = 'dockerfile'
+                docker.withRegistry('', registryCredential) {
+                    def app = docker.build(registry_stage, "-f ${dockerfile} https://github.com/fitraelbi/cashier-restaurant-app-vue.git#stage")
+                    app.push("latest")
+                    def backend = docker.build(registry_backend, "-f ${dockerfile} https://github.com/fitraelbi/cashier-restaurant-app-nodejs3.git#node_dev")
+                    backend.push("latest")
+                  }
+               }
+            }
+        }
+        stage('Build Docker Image Development'){
+            when {
+                expression {
+                    BRANCH_NAME == 'develop'
+                }
+            }
+            steps{
+               script {             
+                 def dockerfile_dev = 'dockerfile.dev'
+                 def dockerfile = 'dockerfile'
+                docker.withRegistry('', registryCredential) {
+                    def app2 = docker.build(registry_dev, "-f ${dockerfile_dev} https://github.com/fitraelbi/cashier-restaurant-app-vue.git#dev")
+                    app2.push("latest")
+                    def backend2 = docker.build(registry_backend, "-f ${dockerfile} https://github.com/fitraelbi/cashier-restaurant-app-nodejs3.git#node_dev")
+                    backend2.push("latest")
+                  }
+               }
+            }
+        }
+        
         stage('Run Testing'){
             when {
                 expression {
@@ -25,7 +63,7 @@ pipeline{
                 }
             }
             steps{
-                ansiblePlaybook become: true, installation: 'ansible', inventory: 'hosts', playbook: 'ansible.yaml'
+                echo 'test'
             }
         }
     }
