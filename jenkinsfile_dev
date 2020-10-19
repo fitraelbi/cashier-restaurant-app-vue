@@ -55,7 +55,13 @@ pipeline{
                }
             }
         }
-        
+        stage('Remove Image'){
+            steps{
+                echo 'Remove....'
+                sh "docker rmi ${registry_dev}:latest"
+                sh "docker rmi ${registry_backend}:latest"
+            }
+        }
         stage('Run Testing'){
             when {
                 expression {
