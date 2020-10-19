@@ -1,7 +1,28 @@
 ---
-    - name: "Simple playbook"
-      hosts: hosts
+    - name: Setup Docker
+      hosts: db-center
 
       tasks:
-        - name: Check Connection node
+        - name: Check connection node
           ping:
+
+        - name: Install Docker
+          apt:
+            name: docker
+            state: present
+        
+        - name: Ensure docker is running
+          service:
+            name: docker
+            state: started
+            enabled: yes
+        
+        - name: Add user to group docker
+          user:
+            name: ansman
+            groups: docker
+            append: yes 
+
+        - name: Install docker python
+          pip: 
+            name: docker
