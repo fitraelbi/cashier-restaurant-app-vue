@@ -83,7 +83,7 @@ pipeline{
                    sshPublisher(
                         publishers: [
                             sshPublisherDesc(
-                                configName: 'Development',
+                                configName: 'ansman_dev',
                                 verbose: false,
                                 transfers: [
                                     sshTransfer(
