@@ -1,6 +1,7 @@
 ---
     - name: Setup Docker
       hosts: db-center
+      become: staging-server
 
       tasks:
         - name: Check connection node
