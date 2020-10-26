@@ -21,7 +21,7 @@ pipeline{
         stage('Build Docker Image Production'){
             when {
                 expression {
-                    BRANCH_NAME == 'staging'
+                    BRANCH_NAME == 'staging_kub'
                 }
             }
             steps{
