@@ -1,0 +1,58 @@
+pipeline{
+    agent any
+    parameters {
+        booleanParam(name: 'RUNTEST', defaultValue: true, description: 'Toggle this value for testing')
+        choice(name: 'DEV/PRODUCTION', choices: ['DEVELOP', 'PRODUCTION'], description: 'Choose Server')
+    }
+    environment {
+        registry = "fitrakz/staging_kub"
+        registry_develop = "fitrakz/develop2"
+        registry_backend = "fitrakz/node_dev"
+        registryCredential = 'dockerHub'
+    }
+    stages{
+        stage('Build Project'){
+            steps{
+                nodejs('node12') {
+                    sh 'yarn install'
+                }
+            }
+        }
+        stage('Build Docker Image Production'){
+            when {
+                expression {
+                    BRANCH_NAME == 'staging'
+                }
+            }
+            steps{
+               script {             
+                 def dockerfile = 'dockerfile'
+                docker.withRegistry('', registryCredential) {
+                    def app = docker.build(registry, "-f ${dockerfile} https://github.com/fitraelbi/cashier-restaurant-app-vue.git#staging_kub")
+                    app.push("latest")
+                    def backend = docker.build(registry_backend, "-f ${dockerfile} https://github.com/fitraelbi/cashier-restaurant-app-nodejs3.git#main")
+                    backend.push("latest")
+                  }
+               }
+            }
+        }
+        stage('Remove Image'){
+            steps{
+                echo 'Remove....'
+                sh "docker rmi ${registry}:latest"
+                sh "docker rmi ${registry_backend}:latest"
+            }
+        }
+        stage('Run Testing'){
+            when {
+                expression {
+                    params.RUNTEST
+                }
+            }
+            steps{
+                echo 'Testing....'
+            }
+        }
+ 
+    }
+}
